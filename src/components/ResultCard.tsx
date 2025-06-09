@@ -76,7 +76,7 @@ const ResultCard: Component<ResultCardProps> = (props) => {
 
       {/* <div class="flex items-center mb-3"> */}
       <div class="bg-gray-200 py-7px text-center border-2 border-dashed rounded-xl overflow-hidden" >
-        <img src={props.item.versions[0].files[1]?.source||'https://marketplace.visualstudio.com/_static/tfs/M257_20250527.11/_content/Header/default_icon.png'} alt="" />
+        <img class='h-72px' src={props.item.versions[0].files[1]?.source||'https://marketplace.visualstudio.com/_static/tfs/M257_20250527.11/_content/Header/default_icon.png'} alt="" />
       </div>
       <div class="ml-4 flex-1">
         <h3 class="font-semibold text-lg">{props.item.displayName}</h3>
