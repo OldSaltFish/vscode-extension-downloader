@@ -7,13 +7,14 @@ import { ExtensionItem } from './types/extensionItem';
 
 export default function App() {
   const [query, setQuery] = createSignal('');
+  let [itemCount,setItemCount] = createSignal(0);
   const [platform, setPlatform] = createSignal("Microsoft.VisualStudio.Code");
   const [isSearching, setIsSearching] = createSignal(false);
   const [results, setResults] = createSignal<ExtensionItem[]>([]);
 
   // 顶部导航链接
   const navLinks = [
-    { name: "GitHub", url: "https://github.com/your-repo" },
+    { name: "GitHub", url: "https://github.com/OldSaltFish/vscode-extension-downloader" },
   ];
 
   // 执行搜索
@@ -59,6 +60,7 @@ export default function App() {
 
       const data = await response.json();
       setResults(data.results[0].extensions || []);
+      setItemCount(data.results[0].resultMetadata[0].metadataItems[0].count);
     } catch (error) {
       console.error("搜索失败:", error);
       setResults([]);
@@ -110,7 +112,7 @@ export default function App() {
         {/* 分页 */}
         {results().length > 0 && (
           <div class="mt-8">
-            <Pagination onPageChange={performSearch}/>
+            <Pagination itemCount={itemCount()} onPageChange={performSearch}/>
           </div>
         )}
       </main>

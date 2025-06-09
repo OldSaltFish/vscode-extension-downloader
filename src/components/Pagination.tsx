@@ -1,16 +1,17 @@
-import { Component,createSignal } from 'solid-js';
+import { Component, createSignal } from 'solid-js';
 interface PaginationProps {
+    itemCount: number;
     onPageChange: (page?: number) => void;
-  }
-const Pagination:Component<PaginationProps> = (props)=> {
-   // 状态管理
+}
+const Pagination: Component<PaginationProps> = (props) => {
+    // 状态管理
     const [currentPage, setCurrentPage] = createSignal(1);
-    const [itemsPerPage, setItemsPerPage] = createSignal(10);
-    const [totalItems] = createSignal(100); // 假设总数据量为100
-
-    // 计算总页数
-    const totalPages = () => Math.ceil(totalItems() / itemsPerPage());
-
+    console.log('items',props.itemCount);
+    
+    // 计算总页数(固定15条每页)
+    const totalPages = () => Math.ceil(props.itemCount/ 15);
+    console.log('总页数',totalPages());
+    
     // 生成页码按钮范围（当前页前后各2页）
     const getPageRange = () => {
         const range = [];
@@ -33,25 +34,6 @@ const Pagination:Component<PaginationProps> = (props)=> {
 
     return (
         <div class="flex items-center justify-between gap-4">
-            {/* 左侧：每页数量下拉框 */}
-            {/* <div class="flex items-center gap-2">
-          <span>每页显示：</span>
-          <select
-            value={itemsPerPage()}
-            onChange={(e) => {
-              setItemsPerPage(Number(e.target.value));
-              setCurrentPage(1); // 重置到第一页
-            }}
-            class="border rounded px-2 py-1"
-          >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-          </select>
-        </div> */}
-
-            {/* 右侧：分页导航 */}
             <div class="flex items-center justify-center gap-8px py-4">
                 {/* 第一页按钮 */}
                 <button
