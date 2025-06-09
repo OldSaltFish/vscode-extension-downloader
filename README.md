@@ -11,6 +11,8 @@ git add -f dist/ && git commit -m "暂存dist"
 git switch product
 git checkout main -- dist
 # 将dist目录中的内容移动到根目录，并删除dist目录
+rimraf static/ index.html
+mv dist/* ./
 # ......
 # 回到主分支，回退commit
 git switch main
