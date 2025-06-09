@@ -79,7 +79,7 @@ const ResultCard: Component<ResultCardProps> = (props) => {
         <img src={props.item.versions[0].files[1]?.source||'https://marketplace.visualstudio.com/_static/tfs/M257_20250527.11/_content/Header/default_icon.png'} alt="" />
       </div>
       <div class="ml-4 flex-1">
-        <h3 class="font-semibold text-lg">{props.item.extensionName}</h3>
+        <h3 class="font-semibold text-lg">{props.item.displayName}</h3>
         <div class="flex items-center justify-between">
           <p class="flex-1 text-gray-500 text-sm">{props.item.publisher.displayName}</p>
           <button
