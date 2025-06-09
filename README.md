@@ -9,14 +9,10 @@ dist中的源码由构建系统生成，并无什么意义，然而需要分支�
 # 主分支开发好后，执行构建
 pnpm build
 # 需要手动修改dist/index.html中的标题为`vsc插件下载`
-git add -f dist/ && git commit -m "暂存dist"
-# 切换到product分支，检出master分支中的dist。  
+# 切换到product分支
 git switch product
-git checkout main -- dist
-# 将dist目录中的内容移动到根目录，并删除dist目录
-# 提交并推送新的静态网页代码
-# ......
-# 回到主分支，回退commit
-git switch main
-git reset HEAD~1
+# powershell的rm命令比较残废，使用rimraf替代
+rimraf index.html static/
+mv dist/* .
+# 后续推送到远程
 ```
