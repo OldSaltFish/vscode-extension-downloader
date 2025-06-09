@@ -7,12 +7,19 @@ interface SearchBoxProps {
 }
 
 const SearchBox: Component<SearchBoxProps> = (props) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      props.onSearch();
+    }
+  };
+
   return (
     <div class="relative">
       <input
         type="text"
         value={props.query}
         onInput={(e) => props.onInput(e.currentTarget.value)}
+        onKeyDown={handleKeyDown}
         placeholder="搜索扩展..."
         class="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
       />

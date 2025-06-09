@@ -17,10 +17,14 @@ const ResultCard: Component<ResultCardProps> = (props) => {
     // 不足1000直接显示数字
     return count.toString();
   }
-  const installStat = props.item.statistics.find((item) => item.statisticName === 'install');
+  // 部分插件获取不到statistics属性，以0次下载以及0星处理。  
+  const installStat = props.item.statistics?.find((item) => item.statisticName === 'install');
   const downloadCount = formatDownloadCount(installStat?.value || 0);
   // 获取评分并向上取整到半星粒度
   const getRoundedRating = () => {
+    if(!('statistics' in props.item)){
+      return 0;
+    }
     const ratingStat = props.item.statistics.find(
       (item: { statisticName: string }) => item.statisticName === 'weightedRating'
     );
@@ -76,8 +80,8 @@ const ResultCard: Component<ResultCardProps> = (props) => {
       </div>
       <div class="ml-4 flex-1">
         <h3 class="font-semibold text-lg">{props.item.extensionName}</h3>
-        <div class="flex align-center justify-between">
-          <p class="text-gray-500 text-sm">{props.item.publisher.displayName}</p>
+        <div class="flex items-center justify-between">
+          <p class="flex-1 text-gray-500 text-sm">{props.item.publisher.displayName}</p>
           <button
             onClick={()=>handleDownload(props.item)}
             class="bg-blue-600 text-white py-8px rounded-md hover:bg-blue-700 transition-colors"
