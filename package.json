@@ -16,6 +16,7 @@
     "@rsbuild/plugin-babel": "^1.0.5",
     "@rsbuild/plugin-solid": "^1.0.5",
     "@unocss/preset-uno": "^66.1.4",
+    "@unocss/preset-wind3": "66.1.4",
     "@unocss/webpack": "^66.1.4",
     "typescript": "^5.8.3"
   },

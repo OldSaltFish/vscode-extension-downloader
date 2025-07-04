@@ -2,7 +2,7 @@ import { defineConfig } from '@rsbuild/core';
 import { pluginBabel } from '@rsbuild/plugin-babel';
 import { pluginSolid } from '@rsbuild/plugin-solid';
 import { UnoCSSRspackPlugin } from '@unocss/webpack/rspack';
-import { presetUno } from '@unocss/preset-uno';
+import { presetWind3 } from '@unocss/preset-wind3';
 
 export default defineConfig({
   plugins: [
@@ -15,7 +15,7 @@ export default defineConfig({
     rspack: {
       plugins: [
         UnoCSSRspackPlugin({
-          presets: [presetUno(),],
+          presets: [presetWind3(),],
         }),
       ],
     },

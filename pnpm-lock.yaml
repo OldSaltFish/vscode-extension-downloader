@@ -24,6 +24,9 @@ importers:
       '@unocss/preset-uno':
         specifier: ^66.1.4
         version: 66.1.4
+      '@unocss/preset-wind3':
+        specifier: 66.1.4
+        version: 66.1.4
       '@unocss/webpack':
         specifier: ^66.1.4
         version: 66.1.4(webpack@5.99.9)
@@ -344,6 +347,9 @@ packages:
 
   '@unocss/core@66.1.4':
     resolution: {integrity: sha512-PE9PbRG0Gs/srBfps+OuTJ2dJXkz/FgCqefma6Hgdu7xYHFWx2Fq8AnmqghAJxyT6GDpcyQYXiL+ovJNOKWTEg==}
+
+  '@unocss/core@66.3.2':
+    resolution: {integrity: sha512-C8UbTenNb/pHo68Ob+G1DTKJkQOeWT8IXTzDV7Vq6hPa9R7eE1l2l20pDKGs6gXYEBYPpY9EV4f5E0vUKDf8sw==}
 
   '@unocss/extractor-arbitrary-variants@66.1.4':
     resolution: {integrity: sha512-JSkGUVeOZ4p6XQwVXPrsYvC3Dcz/SOGwGqkaq+KnvdfVxEvLvhCIc6rmj3xKLDx3KotvL+b0HKxKpRZA3SRo2A==}
@@ -1254,6 +1260,8 @@ snapshots:
 
   '@unocss/core@66.1.4': {}
 
+  '@unocss/core@66.3.2': {}
+
   '@unocss/extractor-arbitrary-variants@66.1.4':
     dependencies:
       '@unocss/core': 66.1.4
@@ -1277,7 +1285,7 @@ snapshots:
 
   '@unocss/rule-utils@66.1.4':
     dependencies:
-      '@unocss/core': 66.1.4
+      '@unocss/core': 66.3.2
       magic-string: 0.30.17
 
   '@unocss/webpack@66.1.4(webpack@5.99.9)':

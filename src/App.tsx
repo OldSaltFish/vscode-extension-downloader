@@ -2,6 +2,8 @@ import { createSignal, For } from 'solid-js';
 import SearchBox from './components/SearchBox';
 import ResultCard from './components/ResultCard';
 import Pagination from './components/Pagination';
+import VersionModal from './components/VersionModal';
+
 import { ExtensionItem } from './types/extensionItem';
 
 
@@ -11,7 +13,9 @@ export default function App() {
   const [platform, setPlatform] = createSignal("Microsoft.VisualStudio.Code");
   const [isSearching, setIsSearching] = createSignal(false);
   const [results, setResults] = createSignal<ExtensionItem[]>([]);
-
+  // 模态框属性
+  const [isOpen, setIsOpen] = createSignal(false);
+  const [currentItem, setCurrentItem] = createSignal<ExtensionItem | null>(null);
   // 顶部导航链接
   const navLinks = [
     { name: "GitHub", url: "https://github.com/OldSaltFish/vscode-extension-downloader" },
@@ -105,7 +109,7 @@ export default function App() {
         {results().length > 0 && (
           <div class="w-full max-w-4xl mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <For each={results()}>
-              {(item) => <ResultCard item={item} />}
+              {(item) => <ResultCard item={item} setCurrentItem={setCurrentItem} setIsOpen={setIsOpen} />}
             </For>
           </div>
         )}
@@ -130,6 +134,7 @@ export default function App() {
           </div>
         </div>
       </footer>
+      <VersionModal item={currentItem()} isOpen={isOpen()} setIsOpen={setIsOpen}/>
     </div>
   );
 }
