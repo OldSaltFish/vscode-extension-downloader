@@ -5,6 +5,9 @@ import { UnoCSSRspackPlugin } from '@unocss/webpack/rspack';
 import { presetWind3 } from '@unocss/preset-wind3';
 
 export default defineConfig({
+  html: {
+    title: 'VSCode插件下载',
+  },
   plugins: [
     pluginBabel({
       include: /\.(?:jsx|tsx)$/,
