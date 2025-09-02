@@ -1,6 +1,7 @@
 import { Component } from 'solid-js';
 import { ExtensionItem } from '../types/extensionItem';
 import { execDownload } from '../utils';
+import { downloadTarget, setDownloadTarget, setIsTargetPlatformModalOpen } from '../store';
 interface ResultCardProps {
   item: ExtensionItem;
   setCurrentItem: (item: ExtensionItem) => void; // 可选的回调函数
@@ -8,13 +9,32 @@ interface ResultCardProps {
 }
 
 const ResultCard: Component<ResultCardProps> = (props) => {
+
   const handleDownload = (item: ExtensionItem) => {
+    setDownloadTarget({
+      publisherName: item.publisher.publisherName,
+      extensionName: item.extensionName,
+      version: item.versions[0].version,
+    })
+    if (item.versions.length > 1) {
+      props.setCurrentItem(item);
+      setDownloadTarget({
+        ...downloadTarget(),
+        targetPlatform: 'win32-x64'
+      })
+      setIsTargetPlatformModalOpen(true);
+      return;
+    }
     // 执行下载
-    execDownload(item.publisher.publisherName, item.extensionName, item.versions[0].version);
+    execDownload(downloadTarget()!);
   }
   const handleVersion = () => {
     // 显示模态框，并传入item
     props.setCurrentItem(props.item);
+    setDownloadTarget({
+      publisherName: props.item.publisher.publisherName,
+      extensionName: props.item.extensionName
+    })
     props.setIsOpen(true);
   }
   function formatDownloadCount(count: number) {
@@ -109,7 +129,6 @@ const ResultCard: Component<ResultCardProps> = (props) => {
           {downloadCount} 次下载
         </span>
       </div>
-
     </div>
   );
 };

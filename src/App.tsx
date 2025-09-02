@@ -5,11 +5,15 @@ import Pagination from './components/Pagination';
 import VersionModal from './components/VersionModal';
 
 import { ExtensionItem } from './types/extensionItem';
+import Modal from './components/base/Modal';
+import { downloadTarget, isTargetPlatformModalOpen, setDownloadTarget, setIsTargetPlatformModalOpen } from './store';
+import ToastContainer from './components/base/Toast';
+import { execDownload } from './utils';
 
 
 export default function App() {
   const [query, setQuery] = createSignal('');
-  let [itemCount,setItemCount] = createSignal(0);
+  let [itemCount, setItemCount] = createSignal(0);
   const [platform, setPlatform] = createSignal("Microsoft.VisualStudio.Code");
   const [isSearching, setIsSearching] = createSignal(false);
   const [results, setResults] = createSignal<ExtensionItem[]>([]);
@@ -22,9 +26,9 @@ export default function App() {
   ];
 
   // 执行搜索
-  const performSearch = async (param?:number|Event) => {
-    const page = (param instanceof Event||param===undefined)?1:param;
-    if (!query()) return;    
+  const performSearch = async (param?: number | Event) => {
+    const page = (param instanceof Event || param === undefined) ? 1 : param;
+    if (!query()) return;
     setIsSearching(true);
 
     try {
@@ -116,7 +120,7 @@ export default function App() {
         {/* 分页 */}
         {results().length > 0 && (
           <div class="mt-8">
-            <Pagination itemCount={itemCount()} onPageChange={performSearch}/>
+            <Pagination itemCount={itemCount()} onPageChange={performSearch} />
           </div>
         )}
       </main>
@@ -134,7 +138,32 @@ export default function App() {
           </div>
         </div>
       </footer>
-      <VersionModal item={currentItem()} isOpen={isOpen()} setIsOpen={setIsOpen}/>
+      <VersionModal item={currentItem()!} isOpen={isOpen()} setIsOpen={setIsOpen} />
+      <Modal title='选择架构' isOpen={isTargetPlatformModalOpen()} onClose={() => setIsTargetPlatformModalOpen(false)}>
+        <div class='flex justify-center gap-12px'>
+          <select class='w-50% p-8px' value={downloadTarget()?.targetPlatform} onChange={e => {
+            setDownloadTarget({
+              ...downloadTarget(),
+              targetPlatform: e.target.value,
+            })
+            console.log('target', downloadTarget());
+
+            execDownload(downloadTarget()!);
+            setIsTargetPlatformModalOpen(false);
+          }}>
+            {currentItem()?.versions.map(item => {
+              return (
+                <option class='p-2' value={item.targetPlatform}>{item.targetPlatform}</option>
+              )
+            })}
+          </select>
+          <button class='bg-blue-600 text-white py-8px rounded-md hover:bg-blue-700 transition-colors' onClick={() => {
+            execDownload(downloadTarget()!);
+            setIsTargetPlatformModalOpen(false);
+          }}>下载</button>
+        </div>
+      </Modal>
+      <ToastContainer></ToastContainer>
     </div>
   );
 }

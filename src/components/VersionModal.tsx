@@ -2,6 +2,7 @@ import { createSignal, Show } from "solid-js";
 import { ExtensionItem } from "../types/extensionItem";
 import { execDownload } from "../utils";
 import { createEffect } from "solid-js";
+import { downloadTarget, setDownloadTarget } from "../store";
 
 // 外部传递ID进行查询，并选择，最终将选择的版本返回给调用者
 
@@ -32,8 +33,14 @@ async function fetchExtensionVersions(id: string = "WallabyJs.console-ninja") {
         });
 
         const result = await response.json();
+        const tempSet = new Set<string>();
         const extensionData: ExtensionItem = result.results[0].extensions[0];
-        return extensionData.versions.map(item => item.version);
+        extensionData.versions.forEach(item => {
+            if (!tempSet.has(item.version)) {
+                tempSet.add(item.version);
+            }
+        })
+        return Array.from(tempSet);
     } catch (error) {
         console.error('Error:', error);
         throw error;
@@ -41,7 +48,7 @@ async function fetchExtensionVersions(id: string = "WallabyJs.console-ninja") {
 }
 
 
-export default function VersionModal(props: { item: ExtensionItem | null, isOpen: boolean, setIsOpen: (isOpen: boolean) => void }) {
+export default function VersionModal(props: { item: ExtensionItem, isOpen: boolean, setIsOpen: (isOpen: boolean) => void }) {
     const [inputValue, setInputValue] = createSignal("");
     const [selectedOption, setSelectedOption] = createSignal("");
     const [isDropdownOpen, setIsDropdownOpen] = createSignal(true);
@@ -52,9 +59,9 @@ export default function VersionModal(props: { item: ExtensionItem | null, isOpen
         props.setIsOpen(false);
     }
     const handleDownload = () => {
-        const version = selectedOption();
+        const version = downloadTarget()?.version;
         if (version) {
-            execDownload(props.item!.publisher.publisherName, props.item!.extensionName, version);
+            execDownload(downloadTarget()!);
         } else {
             alert("请选择一个版本进行下载");
         }
@@ -94,53 +101,70 @@ export default function VersionModal(props: { item: ExtensionItem | null, isOpen
                         </div>
 
                         {/* 主体内容 */}
-                        <div class="p-4">
-                            <div class="relative">
-                                {/* 输入框 */}
-                                <div class="flex items-center border rounded">
-                                    <input
-                                        type="text"
-                                        value={selectedOption()}
-                                        onInput={(e) => {
-                                            setInputValue(e.currentTarget.value);
-                                            setSelectedOption(e.currentTarget.value);
-                                            setIsDropdownOpen(true);
-                                        }}
-                                        onClick={() => setIsDropdownOpen(!isDropdownOpen())}
-                                        placeholder="搜索或选择..."
-                                        class="flex-1 p-2 outline-none"
-                                    />
-                                    <button
-                                        onClick={() => handleDownload()}
-                                        class="h-36px px-2 text-gray-500"
-                                    >
-                                        下载
-                                    </button>
-                                </div>
-
+                        <div class="relative p-4 grid gap-2">
+                            {/* 输入框 */}
+                            <div class="flex items-center border rounded">
+                                <input
+                                    type="text"
+                                    value={selectedOption()}
+                                    onInput={(e) => {
+                                        setInputValue(e.currentTarget.value);
+                                        setSelectedOption(e.currentTarget.value);
+                                        setIsDropdownOpen(true);
+                                    }}
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen())}
+                                    placeholder="搜索或选择..."
+                                    class="flex-1 p-2 outline-none"
+                                />
+                                <button
+                                    onClick={() => {
+                                        setDownloadTarget({
+                                            ...downloadTarget(),
+                                            version: selectedOption(),
+                                        })
+                                        handleDownload()
+                                    }}
+                                    class="h-36px px-2 text-gray-500"
+                                >
+                                    下载
+                                </button>
                                 {/* 下拉选项 */}
-                                <Show when={isDropdownOpen()}>
-                                    <div class="absolute z-10 mt-1 w-full bg-white border rounded shadow-lg max-h-60 overflow-auto">
-                                        {filteredOptions().length > 0 ? (
-                                            filteredOptions().map(option => (
-                                                <div
-                                                    onClick={() => {
-                                                        setSelectedOption(option);
-                                                        setInputValue("");
-                                                        setIsDropdownOpen(false);
-                                                    }}
-                                                    class="p-2 hover:bg-gray-100 cursor-pointer"
-                                                >
-                                                    {option}
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <div class="p-2 text-gray-500">无匹配结果</div>
-                                        )}
-                                    </div>
-                                </Show>
+
                             </div>
+                            <div class={`${isDropdownOpen() ? '' : 'hidden'} mt-1 w-full bg-white border rounded shadow-lg max-h-60 overflow-auto`}>
+                                {filteredOptions().length > 0 ? (
+                                    filteredOptions().map(option => (
+                                        <div
+                                            onClick={() => {
+                                                setSelectedOption(option);
+                                                setInputValue("");
+                                                setIsDropdownOpen(false);
+                                            }}
+                                            class="p-2 hover:bg-gray-100 cursor-pointer"
+                                        >
+                                            {option}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div class="p-2 text-gray-500">无匹配结果</div>
+                                )}
+                            </div>
+                            <Show when={props.item.versions.length > 1}>
+                                <select class='w-full p-8px' value={downloadTarget()?.targetPlatform} onChange={e => {
+                                    setDownloadTarget({
+                                        ...downloadTarget(),
+                                        targetPlatform: e.target.value
+                                    })
+                                }}>
+                                    {props.item?.versions.map(item => {
+                                        return (
+                                            <option class="p-2" value={item.targetPlatform}>{item.targetPlatform}</option>
+                                        )
+                                    })}
+                                </select>
+                            </Show>
                         </div>
+
 
                         {/* 底部按钮 */}
                         <div class="flex justify-end p-4 border-t gap-2">

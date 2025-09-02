@@ -27,6 +27,7 @@ export interface Publisher {
 
 export interface Version {
     version: string
+    targetPlatform?: string
     flags: string
     lastUpdated: string
     files: File[]
