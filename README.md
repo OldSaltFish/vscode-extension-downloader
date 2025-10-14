@@ -12,4 +12,5 @@ git switch product
 # 将dist目录中的内容移动到根目录，并删除dist目录
 rimraf static/ index.html
 mv dist/* ./
+git add . && git commit -m 'update' && git push
 ```
