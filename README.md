@@ -3,14 +3,22 @@
 ## 开发
 使用main作为开发分支，product作为发布分支。  
 dist中的源码由构建系统生成，并无什么意义，然而需要分支中有源文件，因此出此下策。
-```pwsh
+```shell
 # 主分支开发好后，执行构建
 pnpm build
-# 由于开发分支忽略了dist目录，因此切换时会直接带过来。  
+# 切换到 product 分支
 git switch product
-# git checkout main -- dist
-# 将dist目录中的内容移动到根目录，并删除dist目录
-rimraf static/ index.html
-mv dist/* ./
-git add . && git commit -m 'update' && git push
+
+# powershell 的 rm 命令比较残废，使用 rimraf 替代
+rimraf index.html static/
+mv dist/* .
+
+# 后续推送到远程
+git add .
+git commit -m "update: 发布新版本"
+git push origin product
+```
+
+```pwsh
+rm -fo -r .\index.html , .\static\
 ```
