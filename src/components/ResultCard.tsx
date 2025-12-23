@@ -2,6 +2,7 @@ import { Component } from 'solid-js';
 import { ExtensionItem } from '../types/extensionItem';
 import { execDownload } from '../utils';
 import { downloadTarget, setDownloadTarget, setIsTargetPlatformModalOpen } from '../store';
+import defaultIcon from '../assets/default_icon.png';
 interface ResultCardProps {
   item: ExtensionItem;
   setCurrentItem: (item: ExtensionItem) => void; // 可选的回调函数
@@ -105,7 +106,7 @@ const ResultCard: Component<ResultCardProps> = (props) => {
       {/* Logo 和评分下载量区域 */}
       <div class="flex-shrink-0 mr-4 flex flex-col items-center">
         <div class="w-72px h-72px flex items-center justify-center">
-          <img class='w-72px h-72px object-contain' src={props.item.versions[0].files[1]?.source || 'https://cdn.vsassets.io/v/M266_20251205.4/_content/Header/default_icon.png'} alt="" />
+          <img class='w-72px h-72px object-contain' src={props.item.versions[0].files[1]?.source || defaultIcon} alt="" />
         </div>
         {/* 评分和下载量 */}
         <div class="mt-2 flex flex-col items-center gap-1">
@@ -127,7 +128,7 @@ const ResultCard: Component<ResultCardProps> = (props) => {
             href={getMarketplaceUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            class="font-semibold text-lg text-black dark:text-white no-underline hover:underline hover:decoration-black dark:hover:decoration-white cursor-pointer block transition-colors line-clamp-2"
+            class="font-semibold text-lg text-black dark:text-white no-underline hover:underline hover:decoration-black dark:hover:decoration-white cursor-pointer transition-colors line-clamp-2"
             style={{ 'text-decoration': 'none' }}
             onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'underline'}
             onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'none'}
