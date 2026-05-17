@@ -32,9 +32,7 @@ async function fetchExtensionVersions(id: string = "WallabyJs.console-ninja") {
         });
 
         const result = await response.json();
-        const tempSet = new Set<string>();
         const extensionData: ExtensionItem = result.results[0].extensions[0];
-        const tempList: string[] = [];
         // extensionData.versions.forEach(item => {
         //     if (!tempSet.has(item.version)) {
         //         tempSet.add(item.version);
@@ -150,7 +148,7 @@ export default function VersionModal(props: { item: ExtensionItem, isOpen: boole
                 <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
                     <div 
                         ref={modalRef}
-                        class="backdrop-blur-md rounded-lg w-full max-w-2xl transition-colors relative overflow-hidden" 
+                        class="backdrop-blur-md rounded-lg w-full max-w-2xl transition-colors relative overflow-visible" 
                         style={{
                             'box-shadow': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
                             'backdrop-filter': 'blur(8px) saturate(150%)',
@@ -190,45 +188,39 @@ export default function VersionModal(props: { item: ExtensionItem, isOpen: boole
                                     }}
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen())}
                                     placeholder="搜索或选择插件版本"
-                                    class={`w-full p-8px outline-none bg-white dark:bg-zinc-700 text-gray-900 dark:text-zinc-100 placeholder-gray-500 dark:placeholder-gray-400 box-border ${
-                                        isDropdownOpen() ? 'rounded-t-md rounded-b-none border-t border-l border-r border-gray-300 dark:border-zinc-600' : 
-                                        'rounded-md border border-gray-300 dark:border-zinc-600'
-                                    }`}
-                                    style={isDropdownOpen() ? { 'border-bottom': 'none' } : {}}
+                                    class={`w-full p-8px outline-none bg-white dark:bg-zinc-700 text-gray-900 dark:text-zinc-100 placeholder-gray-500 dark:placeholder-gray-400 box-border border border-gray-300 dark:border-zinc-600 rounded-md`}
                                 />
-                            </div>
-                            {/* 下拉选项 */}
-                            <Show when={isDropdownOpen()}>
-                                <div 
-                                    class="bg-white dark:bg-zinc-700 border-l border-r border-b border-gray-300 dark:border-zinc-600 rounded-b-md max-h-60 overflow-auto"
-                                    style={filteredOptions().length > 0 ? { 'box-shadow': 'inset 0 5px 5px 0px rgba(0, 0, 0, 0.1)' } : {}}
-                                >
-                                    {filteredOptions().length > 0 ? (
-                                        filteredOptions().map(option => (
-                                            <div
-                                                onClick={() => {
-                                                    setSelectedVersion(option);
-                                                    if (option.targetPlatform) {
-                                                        setDownloadTarget({
-                                                            ...downloadTarget(),
-                                                            targetPlatform: option.targetPlatform
-                                                        })
-                                                    }
-                                                    setInputValue("");
-                                                    setIsDropdownOpen(false);
-                                                }}
-                                                class="p-8px hover:bg-gray-100 dark:hover:bg-zinc-600 cursor-pointer text-gray-900 dark:text-zinc-100 transition-colors text-xs"
-                                            >
-                                                {versionDisplayMap(option)}
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div 
-                                            class="w-full p-8px bg-white dark:bg-zinc-700 text-gray-500 dark:text-zinc-400 border-0 box-border text-xs"
-                                        >无匹配结果</div>
-                                    )}
-                                </div>
-                            </Show>
+                                {/* 下拉选项 */}
+                                <Show when={isDropdownOpen()}>
+                                    <div 
+                                        class="absolute left-0 right-0 top-full z-10 bg-white dark:bg-zinc-700 border border-gray-300 dark:border-zinc-600 rounded-b-md max-h-60 overflow-auto shadow-lg"
+                                    >
+                                        {filteredOptions().length > 0 ? (
+                                            filteredOptions().map(option => (
+                                                <div
+                                                    onClick={() => {
+                                                        setSelectedVersion(option);
+                                                        if (option.targetPlatform) {
+                                                            setDownloadTarget({
+                                                                ...downloadTarget(),
+                                                                targetPlatform: option.targetPlatform
+                                                            })
+                                                        }
+                                                        setInputValue("");
+                                                        setIsDropdownOpen(false);
+                                                    }}
+                                                    class="p-8px hover:bg-gray-100 dark:hover:bg-zinc-600 cursor-pointer text-gray-900 dark:text-zinc-100 transition-colors text-xs"
+                                                >
+                                                    {versionDisplayMap(option)}
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div 
+                                                class="w-full p-8px bg-white dark:bg-zinc-700 text-gray-500 dark:text-zinc-400 border-0 box-border text-xs"
+                                            >无匹配结果</div>
+                                        )}
+                                    </div>
+                                </Show>
                             </div>
                             <Show when={props.item.versions.length > 1}>
                                 <select 
@@ -253,10 +245,11 @@ export default function VersionModal(props: { item: ExtensionItem, isOpen: boole
                                 </select>
                             </Show>
                         </div>
+                    </div>
 
 
-                        {/* 底部按钮 */}
-                        <div class="flex justify-end p-4 border-t border-gray-200 dark:border-zinc-700 gap-2">
+                    {/* 底部按钮 */}
+                    <div class="flex justify-end p-4 border-t border-gray-200 dark:border-zinc-700 gap-2">
                             <button
                                 onClick={handleClose}
                                 class="bg-white dark:bg-zinc-700 text-gray-700 dark:text-zinc-200 py-8px px-4 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600 transition-colors border-none outline-none shadow-none"
