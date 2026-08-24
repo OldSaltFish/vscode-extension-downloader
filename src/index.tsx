@@ -37,7 +37,7 @@ document.head.appendChild(link);
 const favicon = document.createElement('link');
 favicon.rel = 'icon';
 favicon.type = 'image/svg+xml';
-favicon.href = '/favicon.svg';
+favicon.href = './favicon.svg';
 document.head.appendChild(favicon);
 
 render(() => <App />, document.getElementById('root')!);
