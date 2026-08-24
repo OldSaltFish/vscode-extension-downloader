@@ -2,7 +2,7 @@
 
 简单纯粹的 VSCode 插件下载网站。
 
-🌐 **在线访问**: https://vsc-extension.dreamsoul.cn/
+🌐 **在线访问**: https://oldsaltfish.github.io/vscode-extension-downloader/
 
 ![alt text](assets/preview_251213.png)
 
@@ -43,6 +43,10 @@ pnpm build
 
 ### 发布流程
 
+> ⚠️ **重要**: `rsbuild.config.ts` 中配置了 `output.assetPrefix: '/vscode-extension-downloader/'`，
+> 这是部署到 GitHub Pages 子路径所必需的（否则资源会请求到根路径 404）。
+> 若改为根路径部署（如自定义域名），需把 assetPrefix 改回 `/` 或改用相对路径 `./`。
+
 ```shell
 # 主分支开发好后，执行构建
 pnpm build
@@ -70,6 +74,9 @@ git push origin product
 
 
 ## 📝 更新日志
+
+### 2025-12-20
+- 🐛 修复 GitHub Pages 子路径下静态资源 404：配置 `output.assetPrefix: '/vscode-extension-downloader/'`，favicon 改为相对路径
 
 ### 2025-12-19
 - 🐛 使用默认图标替代缺失插件的图标，去除背景，更加兼容黑色主题，修复标题行数限制为2
