@@ -75,7 +75,7 @@ git push origin product
 
 ## 📝 更新日志
 
-### 2025-12-20
+### 2026-08-25
 - 🐛 修复 GitHub Pages 子路径下静态资源 404：配置 `output.assetPrefix: '/vscode-extension-downloader/'`，favicon 改为相对路径
 
 ### 2025-12-19
